@@ -120,4 +120,39 @@ describe('mongoose-autopopulate plugin', function() {
       done();
     });
   });
+  
+  it('autopopulates after saving', function(done) {
+    var bandSchema = new Schema({
+      name: String,
+      lead: { type: ObjectId, ref: 'people', autopopulate: true }
+    });
+    bandSchema.plugin(autopopulate);
+    var Band = mongoose.model('band5', bandSchema, 'bands');
+    
+    var personSchema = new Schema({ name: String, birthName: String });
+    var Person = mongoose.model('person5', personSchema, 'people');
+    
+    Person.find({ name: 'Axl Rose' }, function(error, docs) {
+      assert.ifError(error);
+      assert.equal(1, docs.length);
+      
+      var axl = docs[0];
+      console.log('axl', axl);
+      assert.equal('Axl Rose', axl.name);
+      assert.equal('William Bruce Rose, Jr.', axl.birthName);
+      
+      var testBand = new Band({
+        name: 'test band 5',
+        lead: axl
+      });
+      console.log("testBand", testBand);
+      testBand.save(function(error) {
+        console.log("testBand", testBand);
+        assert.ifError(error);
+        assert.equal('Axl Rose', testBand.lead.name);
+        assert.equal('William Bruce Rose, Jr.', testBand.lead.birthName);
+        done();
+      });
+    });
+  });
 });

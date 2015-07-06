@@ -20,6 +20,7 @@ describe('mongoose-autopopulate:unit', function() {
     schemaStub = createSchemaStub(paths);
     var p = plugin(schemaStub);
     assert.equal(2, schemaStub.pre.calls.length);
+    assert.equal(1, schemaStub.post.calls.length);
     assert.equal(0, queryStub.populate.calls.length);
 
     schemaStub.pre.calls[0].handler.call(queryStub);
@@ -36,6 +37,7 @@ describe('mongoose-autopopulate:unit', function() {
     schemaStub = createSchemaStub(paths);
     var p = plugin(schemaStub);
     assert.equal(2, schemaStub.pre.calls.length);
+    assert.equal(1, schemaStub.post.calls.length);
     assert.equal(0, queryStub.populate.calls.length);
 
     schemaStub.pre.calls[0].handler.call(queryStub);
@@ -58,6 +60,7 @@ describe('mongoose-autopopulate:unit', function() {
 
     var p = plugin(schemaStub);
     assert.equal(2, schemaStub.pre.calls.length);
+    assert.equal(1, schemaStub.post.calls.length);
     assert.equal(0, queryStub.populate.calls.length);
 
     schemaStub.pre.calls[0].handler.call(queryStub);
@@ -81,6 +84,7 @@ describe('mongoose-autopopulate:unit', function() {
     schemaStub = createSchemaStub(paths);
     var p = plugin(schemaStub);
     assert.equal(2, schemaStub.pre.calls.length);
+    assert.equal(1, schemaStub.post.calls.length);
     assert.equal(0, queryStub.populate.calls.length);
 
     schemaStub.pre.calls[0].handler.call(queryStub);
@@ -105,6 +109,7 @@ describe('mongoose-autopopulate:unit', function() {
 
     var p = plugin(schemaStub);
     assert.equal(2, schemaStub.pre.calls.length);
+    assert.equal(1, schemaStub.post.calls.length);
     assert.equal(0, queryStub.populate.calls.length);
 
     schemaStub.pre.calls[0].handler.call(queryStub);
@@ -128,6 +133,7 @@ describe('mongoose-autopopulate:unit', function() {
     schemaStub = createSchemaStub(paths);
     var p = plugin(schemaStub);
     assert.equal(2, schemaStub.pre.calls.length);
+    assert.equal(1, schemaStub.post.calls.length);
     assert.equal(0, queryStub.populate.calls.length);
 
     schemaStub.pre.calls[0].handler.call(queryStub);
@@ -155,6 +161,7 @@ describe('mongoose-autopopulate:unit', function() {
 
     var p = plugin(schema);
     assert.equal(schema.pre.calls.length, 2);
+    assert.equal(1, schemaStub.post.calls.length);
     assert.equal(queryStub.populate.calls.length, 0);
 
     schema.pre.calls[0].handler.call(queryStub);
@@ -170,6 +177,11 @@ function createSchemaStub(paths) {
     return schemaStub;
   };
   schemaStub.pre.calls = [];
+  schemaStub.post = function(func, handler) {
+    schemaStub.post.calls.push({ func: func, handler: handler });
+    return schemaStub;
+  };
+  schemaStub.post.calls = [];
   schemaStub.eachPath = function(handler) {
     _.each(paths, function(path) {
       handler(path.name, path.options);
