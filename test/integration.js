@@ -146,8 +146,9 @@ describe('mongoose-autopopulate plugin', function() {
         lead: axl
       });
       console.log("testBand", testBand);
-      testBand.save(function(error) {
+      testBand.save(function(error, testBand2) {
         console.log("testBand", testBand);
+        console.log("testBand2", testBand2);
         assert.ifError(error);
         assert.equal('Axl Rose', testBand.lead.name);
         assert.equal('William Bruce Rose, Jr.', testBand.lead.birthName);
